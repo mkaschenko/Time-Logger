@@ -1,0 +1,20 @@
+development:
+  adapter: mysql
+  database: timelogger_development
+  user: root
+  password: 
+  host: localhost
+
+test:
+  adapter: mysql
+  database: timelogger_test
+  user: root
+  password: 
+  host: localhost
+
+production:
+  adapter: mysql
+  database: timelogger_production
+  user: root
+  password: 
+  host: localhost

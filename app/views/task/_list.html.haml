@@ -1,0 +1,6 @@
+- unless tasks.empty?
+  %ul
+    - for task in tasks
+      %li= task.title
+
+= error_message_on(:task, :title, :prepend_text => "Title ", :css_class => "inputError")

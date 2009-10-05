@@ -1,0 +1,34 @@
+a:hover { background-color: #FFFF88 }
+
+a {
+  color: #0066CC;
+  font-family: verdana;
+  font-size: 11px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.task_title {
+  background: #F5FAFF none repeat scroll 0 0;
+  border: 1px solid #7EBAFF;
+  color: #444444;
+  font-family: arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 1px;
+  width: 100%;
+}
+
+.task_title.example {
+  color: #AAAAAA;
+}
+
+.inputError {
+  background: #FFCEBF;
+  color: #333333;
+  font-family: arial;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  padding: 2px;
+}

@@ -1,7 +1,9 @@
+#task_error
+
 .add_task.link
   = link_to "Add Task", "#"
   
 .add_task.form{ :style => "display:none" }
-  - remote_form_for :task, :update => 'tasks_list' do |f|
+  - remote_form_for :task do |f|
     = f.text_field :title, :class => "task_title"
     = link_to "Cancel", "#"

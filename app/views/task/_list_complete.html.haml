@@ -1,7 +1,7 @@
 - unless tasks.empty?
-  %ul#list
+  %ul#list_complete
     - for task in tasks
       %li
         #task{ :id => task.id }
           = check_box_tag (task.id, "complete", task.complete, :onclick => remote_function(:method => :PUT, :url => { :action => "update", :id => task.id }, :with => "this.value +'='+ this.checked"))
-          = link_to task.title, "#"
+          = task.title

@@ -32,3 +32,37 @@ a {
   margin-bottom: 1px;
   padding: 2px;
 }
+
+ul {
+  padding: 1px;
+  list-style-type: none;
+}
+
+ul li {
+  border-bottom: 1px solid #EEEEEE;
+  position: relative;
+}
+
+ul li div {
+  padding-left: 20px;
+}
+
+ul li input {
+  left: -2px;
+  top: -2px;
+  position: absolute;
+}
+
+ul#list li a {
+  font-size: 12px;
+  display: block;
+}
+
+ul#list_complete li {
+  border: none;
+  text-decoration: line-through;
+  color: #AFAFAF;
+  font-family: verdana;
+  font-size: 11px;
+  font-weight: bold;
+}

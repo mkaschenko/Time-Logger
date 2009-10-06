@@ -3,3 +3,6 @@
 
 #add_task
   = render :partial => "new"
+
+#complete_tasks_list
+  = render :partial => "list_complete", :locals => { :tasks => @complete_tasks }

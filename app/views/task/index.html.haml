@@ -1,5 +1,8 @@
+#timer
+  = render :partial => "timer"
+
 #tasks_list
-  = render :partial => "list", :locals => { :tasks => @tasks }
+  = render :partial => "list", :locals => { :tasks => @tasks, :active_task_id => @active_task_id }
 
 #add_task
   = render :partial => "new"

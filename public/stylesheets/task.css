@@ -58,6 +58,16 @@ ul#list li a {
   display: block;
 }
 
+ul#list li a.active {
+  font-size: 16px;
+  line-height: 16px;
+  background-color: #CCFFBF;
+}
+
+ul#list li a.active:hover {
+  background-color: FF8888;
+}
+
 ul#list_complete li {
   border: none;
   text-decoration: line-through;
@@ -65,4 +75,66 @@ ul#list_complete li {
   font-family: verdana;
   font-size: 11px;
   font-weight: bold;
+}
+
+div#timer {
+  background-color: #FFCEBF;
+  border: 1px solid #B42A00;
+  height: 30px;
+  margin-bottom: 2px;
+  padding: 2px;
+  position: relative;
+}
+
+div#timer.active {
+  background-color: #CCFFBF;
+  border: 1px solid #2AB400;
+}
+
+div#timer.active #total_display {
+  background-color: #8EFF6F;
+}
+
+div#timer a {
+  display: block;
+  float: left;
+  height: 12px;
+  width: 12px;
+  background: transparent url(/images/stop.gif) no-repeat scroll 1px 50%;
+}
+
+#stop:hover { background-color: FF8888 }
+
+div#timer p {
+  font-family: arial, sans-serif;
+  font-weight: bold;
+  margin: 0px;
+}
+
+div#timer p small {
+  font: 11px;
+  font-weight: normal;
+}
+
+div#timer p#timer_display {
+  color: #333333;
+  float: right;
+  font-size: 32px;
+  line-height: 28px;
+}
+
+div#timer p#total_display {
+  background-color: #FF8D6F;
+  bottom: 0px;
+  font-size: 16px;
+  left: 0px;
+  line-height: 11px;
+  padding: 4px 2px 2px;
+  position: absolute;
+  text-align: left;
+}
+
+div#timer p#total_display label {
+  font-size: 11px;
+  font-weight: normal;
 }

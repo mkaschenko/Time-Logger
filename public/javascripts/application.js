@@ -17,7 +17,7 @@ $(document).ready(function() {
   $(".task_title").blur(function() {
     if (!$(this).val()) {
       $(this).addClass('example');
-      $(this).val('Подсказка'); // TODO Изменить значение val
+      $(this).val('[project] task title @work type');
     };
   });
 

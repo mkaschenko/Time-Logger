@@ -4,10 +4,15 @@ class Task < ActiveRecord::Base
   validates_uniqueness_of :title
 
   def full_title=(title)
-    puts "========================================="
-    puts "there"
-    puts "========================================="
-    self.title = title
+    title.strip!
+    title.gsub!(/\s{2,}/, " ") # replace two and more whitespaces on a whitespace
+    project = title.scan(/^\[.+\]/)
+    self.project = project.to_s.sub("[", "").chop
+    title.gsub!(project.to_s, "")
+    work_type = title.scan(/@.+$/)
+    self.work_type = work_type.to_s.sub("@", "")
+    title.gsub!(work_type.to_s, "")
+    self.title = title.strip
   end
 
   def self.find_uncomplete_tasks

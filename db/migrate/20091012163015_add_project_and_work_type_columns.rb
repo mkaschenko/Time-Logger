@@ -1,7 +1,7 @@
 class AddProjectAndWorkTypeColumns < ActiveRecord::Migration
   def self.up
-    add_column :tasks, :project, :string, :default => ""
-    add_column :tasks, :work_type, :string, :default => ""
+    add_column :tasks, :project, :string
+    add_column :tasks, :work_type, :string
   end
 
   def self.down

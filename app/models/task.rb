@@ -1,7 +1,9 @@
 class Task < ActiveRecord::Base
 
+  belongs_to :user
+
   validates_presence_of :title
-  validates_uniqueness_of :title
+  validates_uniqueness_of :title, :scope => :user_id 
 
   def full_title=(title)
     title.strip!
@@ -15,11 +17,11 @@ class Task < ActiveRecord::Base
     self.title = title.strip
   end
 
-  def self.find_uncomplete_tasks
+  def self.uncomplete_tasks
     find(:all, :conditions => ['complete = ?', false], :group => 'title')
   end
 
-  def self.find_complete_tasks
+  def self.complete_tasks
     find(:all, :conditions => ['complete = ?', true], :group => 'title')
   end
 

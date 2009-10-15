@@ -66,6 +66,7 @@ DrawTime = function (time, element) {
   secs = time % 60;
   if (secs > 9) { element.html(mins +"<small>"+"."+ secs + "</small>") } 
   else { element.html(mins +"<small>"+".0"+ secs + "</small>")};
+  // TODO label total
 };
 
 GetActiveTaskId = function () {

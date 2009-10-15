@@ -1,5 +1,12 @@
-= stylesheet_link_tag :all, :cache => true
-%title Tasks
-= yield
-= javascript_include_tag :defaults, "jquery.timers", :cache => true
-= javascript_tag "var authenticity_token = '#{form_authenticity_token}'"
+/ TODO authorisation's interface
+%html
+  %head
+    %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html', :charset => 'utf-8' }
+    = stylesheet_link_tag :all, :cache => true
+    %title Tasks
+    / TODO title
+  %body
+    = render :partial => "users/user_bar"
+    = yield
+    = javascript_include_tag :defaults, "jquery.timers", :cache => true
+    = javascript_tag "var authenticity_token = '#{form_authenticity_token}'"

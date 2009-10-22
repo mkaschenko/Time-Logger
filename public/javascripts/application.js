@@ -6,12 +6,14 @@ $(document).ready(function() {
     $(".task_title").val('');
     $(".task_title").removeClass('example');
     $(".task_title").focus();
+    return false;
   });
 
   $(".add_task.form a").click(function() {
     $(".add_task.form").hide();
     $(".add_task.link").show();
     $(".inputError").hide();
+    return false;
   });
 
   $(".task_title").blur(function() {
@@ -100,9 +102,10 @@ $("#tasks_list a").live('click', function() {
       });
     } else { Start($(this)) };
   };
+  return false;
 });
 
-$("#stop").live('click', function() { GetActiveTaskId(); Stop(); SendSpentTime(); });
+$("#stop").live('click', function() { GetActiveTaskId(); Stop(); SendSpentTime(); return false });
 
 $(":checkbox").live('click', function() {
   GetActiveTaskId();

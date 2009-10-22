@@ -4,4 +4,4 @@
       %li
         #task{ :id => task.id }
           = check_box_tag(task.id, "complete", task.complete)
-          = link_to task.title, "#", :class => active_task?(active_task_id, task.id)
+          = link_to task.title, "", :class => active_task?(active_task_id, task.id)

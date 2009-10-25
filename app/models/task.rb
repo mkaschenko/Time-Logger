@@ -1,9 +1,11 @@
 class Task < ActiveRecord::Base
-
+  belongs_to :project
   belongs_to :user
+  has_many :time_entries
+  has_and_belongs_to_many :worktype
 
   validates_presence_of :title
-  validates_uniqueness_of :title, :scope => :user_id 
+  validates_uniqueness_of :title, :scope => :project_id
 
   def full_title=(title)
     title.strip!

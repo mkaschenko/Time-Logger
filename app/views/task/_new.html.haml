@@ -1,9 +1,7 @@
-#task_error
-
 .add_task.link
   = link_to "Add Task"
 
 .add_task.form{ :style => "display:none" }
   - form_for :task do |f|
-    = f.text_field :full_title, :class => "task_title"
+    = f.text_field :title, :class => "task_title"
     = link_to "Cancel"

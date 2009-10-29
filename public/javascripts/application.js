@@ -4,33 +4,37 @@ $(document).ready(function() {
     $(".add_task.link").hide();
     $(".add_task.form").show();
     $(".task_title").val('');
-    $(".task_title").removeClass('example');
+    // $(".task_title").removeClass('example');
     $(".task_title").focus();
     return false;
   });
 
   $(".add_task.form a").click(function() {
-    $(".add_task.form").hide();
-    $(".add_task.link").show();
-    $(".inputError").hide();
+    HideTaskForm();
     return false;
   });
 
   $(".task_title").blur(function() {
-    if (!$(this).val()) {
-      $(this).addClass('example');
-      $(this).val('[project] task title @work type');
-    };
+    // if (!$(this).val()) {
+      // $(this).addClass('example');
+      // $(this).val('[project] task title @work type 1 @work type n');
+    // };
   });
 
   $(".task_title").click(function() {
-    if ($(this).hasClass('example')) {
-      $(this).val('');
-      $(".task_title").removeClass('example');
-    };
+    // if ($(this).hasClass('example')) {
+    //   $(this).val('');
+    //   $(".task_title").removeClass('example');
+    // };
   });
 
 });
+
+HideTaskForm = function () {
+  $(".add_task.form").hide();
+  $(".add_task.link").show();
+  $("#messages").empty();
+};
 
 var total_time = 0, task_time = 0; active_task_id = 0;
 
@@ -68,7 +72,7 @@ DrawTime = function (time, element) {
   secs = time % 60;
   if (secs > 9) { element.html(mins +"<small>"+"."+ secs + "</small>") } 
   else { element.html(mins +"<small>"+".0"+ secs + "</small>")};
-  // TODO label total
+  // TODO * label total
 };
 
 GetActiveTaskId = function () {
@@ -128,12 +132,22 @@ $(":checkbox").live('click', function() {
 });
 
 $(".add_task.form form").submit(function() {
-  GetActiveTaskId();
+  // GetActiveTaskId();
   $.ajax({
     url: '/task',
     type: 'POST',
-    dataType: 'script',
-    data: ( $(this).serialize() + '&active_task_id='+active_task_id),
+    dataType: 'html',
+    // data: ( $(this).serialize() + '&active_task_id = '+active_task_id),
+    data: $(this).serialize(),
+
+    success: function() {
+      HideTaskForm();
+    },
+
+    error: function(html) {
+      $("#messages").html(html.responseText);
+    },
+
   });
   return false;
 });

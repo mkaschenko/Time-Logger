@@ -1,39 +1,81 @@
 $(document).ready(function() {
 
-  $(".add_task.link a").click(function() {
-    $(".add_task.link").hide();
-    $(".add_task.form").show();
-    $(".task_title").val('');
-    // $(".task_title").removeClass('example');
-    $(".task_title").focus();
-    return false;
-  });
-
-  $(".add_task.form a").click(function() {
-    HideTaskForm();
-    return false;
-  });
-
   $(".task_title").blur(function() {
     // if (!$(this).val()) {
       // $(this).addClass('example');
-      // $(this).val('[project] task title @work type 1 @work type n');
+      // $(this).val('[project] task title @worktype_1 @worktype_n');
     // };
   });
 
-  $(".task_title").click(function() {
+  GetTasks();
+
+});
+
+$(".add_task.link a").live('click', function() {
+  $(".add_task.link").hide();
+  $(".add_task.form").show();
+  $(".task_title").val('');
+  // $(".task_title").removeClass('example');
+  $(".task_title").focus();
+  return false;
+});
+
+$(".add_task.form a").live('click', function() {
+  HideTaskForm();
+  return false;
+});
+
+$(".task_title").live('click', function() {
     // if ($(this).hasClass('example')) {
     //   $(this).val('');
     //   $(".task_title").removeClass('example');
     // };
-  });
-
 });
 
 HideTaskForm = function () {
   $(".add_task.form").hide();
   $(".add_task.link").show();
   $("#messages").empty();
+};
+
+Check = function(project_name) {
+    if (project_name == undefined) {
+      return "";
+    } else {
+      return "["+ project_name +"]";
+    };   
+};
+
+ForCompleteTask = function(worktypes) {
+  result = "";
+  $.each(worktypes, function() {
+    result += "@"+this.name+" ";
+  });
+  return result;
+};
+
+ForUncompleteTask = function(worktypes) {
+  result = "";
+  $.each(worktypes, function() {
+    result += "<a href='' class='worktype'>"+"@"+this.name+"</a> ";
+  });
+  return result;
+};
+
+GetTasks = function () {
+  $.getJSON('/task', function(json) {
+    $complete_tasks = [];
+    $uncomplete_tasks = [];
+    $.each(json, function() {
+      if (this.task.complete) {
+        $complete_tasks.push(this);
+      } else {
+        $uncomplete_tasks.push(this);
+      };
+    });
+    $("#list_complete").fillTemplate($complete_tasks);
+    $("#list").fillTemplate($uncomplete_tasks);
+  });
 };
 
 var total_time = 0, task_time = 0; active_task_id = 0;
@@ -142,6 +184,7 @@ $(".add_task.form form").submit(function() {
 
     success: function() {
       HideTaskForm();
+      GetTasks();
     },
 
     error: function(html) {

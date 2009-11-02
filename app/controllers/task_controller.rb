@@ -3,13 +3,10 @@ class TaskController < ApplicationController
   before_filter :authorize, :get_current_user
 
   def index
-    # @tasks = @current_user.tasks.uncomplete_tasks
-    # @complete_tasks = @current_user.tasks.complete_tasks
-    # @active_task_id = false
-    # respond_to do |wants|
-      # wants.json { render :json => @current_user.tasks.to_json }
-      # wants.html { render :action => "index" }
-    # end
+    respond_to do |wants|
+      wants.html { }
+      wants.json { render :json => cook_json }
+    end
   end
 
   def create
@@ -22,27 +19,15 @@ class TaskController < ApplicationController
     @task = Task.find_by_title(prepared_data[:task], :conditions => conditions)
     if @task
       @task.update_worktypes(prepared_data[:worktypes])
-      # render :action => "index"
-      # redirect_to :action => "index"
     else
       @task = Task.new(:title => prepared_data[:task])
       @task.user = @current_user
       @task.create_project_worktypes_user(prepared_data, @current_user)
-      if @task.save
-        # render :action => "index"
-        # redirect_to :action => "index"
-      else
-        render :partial => "task_errors", :status => 500
+      unless @task.save
+        render :partial => "task_errors", :status => 500 and return
       end
     end
-    # params[:active_task_id] == "undefined" ? @active_task_id = false : @active_task_id = params[:active_task_id].to_i
-    # if @task.save
-    #   render :update do |page|
-    #     page.replace_html 'tasks_list', :partial => "list", :locals => { :tasks => @current_user.tasks.uncomplete_tasks, :active_task_id => @active_task_id }
-    #     page.select('div.inputError').hide()
-    #     page.visual_effect(:highlight, "task_#{@task.id}", :duration => 1)
-    #   end
-    # else
+    render :action => "index"
   end
 
   def update
@@ -55,6 +40,11 @@ class TaskController < ApplicationController
     #   page.replace_html 'complete_tasks_list', :partial => "list_complete", :locals => { :tasks => @current_user.tasks.complete_tasks }
     #   page.visual_effect(:pulsate, "task_#{@task.id}", :duration => 0.3)
     # end
+  end
+
+  def cook_json
+    @current_user.tasks.to_json(:only => [:id, :title, :complete], :include => { :project => { :only => :name }, 
+                                                                                 :worktype => { :only => :name } })
   end
 
   def cut_title(title)

@@ -27,12 +27,4 @@ class Task < ActiveRecord::Base
     end
   end
 
-  # def self.uncomplete_tasks
-  #   find(:all, :conditions => ['complete = ?', false], :group => 'title')
-  # end
-  # 
-  # def self.complete_tasks
-  #   find(:all, :conditions => ['complete = ?', true], :group => 'title')
-  # end
-
 end

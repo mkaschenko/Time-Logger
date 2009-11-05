@@ -65,9 +65,7 @@ ul#list li a.active {
   background-color: #CCFFBF;
 }
 
-ul#list li a.active:hover {
-  background-color: FF8888;
-}
+ul#list li a.active:hover { background-color: FF8888 }
 
 ul#list_complete li {
   border: none;

@@ -27,24 +27,27 @@ class TaskController < ApplicationController
         render :partial => "task_errors", :status => 500 and return
       end
     end
-    render :action => "index"
+    render :nothing => true
   end
 
   def update
-    # @task = Task.find(params[:id])
-    # params[:active_task_id] == "undefined" ? @active_task_id = false : @active_task_id = params[:active_task_id].to_i
-    # params[:task][:spent_time] = params[:task][:spent_time].to_i + @task.spent_time
-    # @task.update_attributes(params[:task])
-    # render :update do |page|
-    #   page.replace_html 'tasks_list', :partial => "list", :locals => { :tasks => @current_user.tasks.uncomplete_tasks, :active_task_id => @active_task_id }
-    #   page.replace_html 'complete_tasks_list', :partial => "list_complete", :locals => { :tasks => @current_user.tasks.complete_tasks }
-    #   page.visual_effect(:pulsate, "task_#{@task.id}", :duration => 0.3)
-    # end
+    task = Task.find(params[:id])
+    if params[:task]
+      task.update_attributes(params[:task])
+    end
+    if params[:time_entry]
+      @time_entry = task.time_entries.build(params[:time_entry])
+      @time_entry.user_id = task.user_id
+      @time_entry.project_id = task.project_id
+      @time_entry.fill_dates
+      @time_entry.save
+    end
+    render :nothing => true
   end
 
   def cook_json
     @current_user.tasks.to_json(:only => [:id, :title, :complete], :include => { :project => { :only => :name }, 
-                                                                                 :worktype => { :only => :name } })
+                                                                                 :worktype => { :only => [:id, :name] } })
   end
 
   def cut_title(title)

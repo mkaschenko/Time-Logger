@@ -57,28 +57,26 @@ ForCompleteTask = function(worktypes) {
 ForUncompleteTask = function(worktypes) {
   result = "";
   $.each(worktypes, function() {
-    result += "<a href='' class='worktype'>"+"@"+this.name+"</a> ";
+    result += "<a href='' class='worktype' id='"+this.id+"'>"+"@"+this.name+"</a> ";
   });
   return result;
 };
 
 GetTasks = function () {
+  complete_tasks = [];
+  uncomplete_tasks = [];
   $.getJSON('/task', function(json) {
-    $complete_tasks = [];
-    $uncomplete_tasks = [];
     $.each(json, function() {
-      if (this.task.complete) {
-        $complete_tasks.push(this);
-      } else {
-        $uncomplete_tasks.push(this);
-      };
+      if (this.task.complete) { complete_tasks.push(this) } 
+      else { uncomplete_tasks.push(this) };
     });
-    $("#list_complete").fillTemplate($complete_tasks);
-    $("#list").fillTemplate($uncomplete_tasks);
+    $("#list_complete").fillTemplate(complete_tasks);
+    $("#list").fillTemplate(uncomplete_tasks);
+    MakeActive();
   });
 };
 
-var total_time = 0, task_time = 0; active_task_id = 0;
+var total_time = 0, active_task_id = undefined;
 
 Stop = function () {
   total_time += task_time;
@@ -88,10 +86,15 @@ Stop = function () {
 };
 
 Start = function (active_task) {
+  if (active_task.hasClass('worktype')) {
+    title = active_task.parent().children("a:first").html() + active_task.html();
+  } else {
+    title = active_task.html();
+  };
   $("#timer_display").everyTime("1s", function (time) { 
     task_time = time;
     DrawTime(task_time, $(this));
-    DrawTitle(task_time, $("title"));
+    DrawTitle(task_time, $("title"), title);
   });
   $("#total_display").everyTime("1s", function (time) {
     time = total_time + time;
@@ -102,11 +105,11 @@ Start = function (active_task) {
   $("#stop").show();
 };
 
-DrawTitle = function (time, title) {
+DrawTitle = function (time, element, title) {
   mins = parseInt(time / 60);
   secs = time % 60;
-  if (secs > 9) { title.html("|"+ mins +"."+ secs +"|" + $("a.active").html()) } 
-  else { title.html("|"+ mins +".0"+ secs +"|" + $("a.active").html()) };
+  if (secs > 9) { element.html("|"+ mins +"."+ secs +"|" + title) } 
+  else { element.html("|"+ mins +".0"+ secs +"|" + title) };
 };
 
 DrawTime = function (time, element) {
@@ -118,15 +121,26 @@ DrawTime = function (time, element) {
 };
 
 GetActiveTaskId = function () {
-  active_task_id = $("#tasks_list a.active").prev().attr('id');
+  active_task_id = $("#tasks_list a.active").parent().children(":first").attr("id");
+  worktype_id = $("#tasks_list a.active").attr("id");
+};
+
+MakeActive = function () {
+  if (active_task_id != undefined) {
+    if (worktype_id == undefined) {
+      element = $("input#"+active_task_id).next();
+    } else {
+      element = $("input#"+active_task_id).parent().children("a#"+worktype_id);
+    };
+    element.addClass('active');
+  };
 };
 
 SendSpentTime = function () {
   $.ajax({
     url: '/task/' + active_task_id,
     type: 'PUT',
-    dataType: 'script',
-    data: { 'task[spent_time]':task_time, authenticity_token:authenticity_token },
+    data: { 'time_entry[time]':task_time, 'time_entry[worktype_id]':worktype_id, authenticity_token:authenticity_token },
   });
 };
 
@@ -134,19 +148,8 @@ $("#tasks_list a").live('click', function() {
   GetActiveTaskId();
   if ($(this).hasClass('active')) { Stop(); SendSpentTime(); }
   else {
-    if (active_task_id != undefined) {
-      Stop();
-      old_active_task_id = active_task_id;
-      old_task_time = task_time;
-      Start($(this));
-      GetActiveTaskId();
-      $.ajax({
-        url: '/task/' + old_active_task_id,
-        type: 'PUT',
-        dataType: 'script',
-        data: { 'task[spent_time]':old_task_time, authenticity_token:authenticity_token, active_task_id:active_task_id },
-      });
-    } else { Start($(this)) };
+    if (active_task_id != undefined) { Stop(); SendSpentTime(); Start($(this)) } 
+    else { Start($(this)) };
   };
   return false;
 });
@@ -155,42 +158,44 @@ $("#stop").live('click', function() { GetActiveTaskId(); Stop(); SendSpentTime()
 
 $(":checkbox").live('click', function() {
   GetActiveTaskId();
-  if (active_task_id != $(this).attr('id')) {
+  clicked_task_id = $(this).attr('id');
+  if (active_task_id != clicked_task_id) {
     $.ajax({
-      url: '/task/' + $(this).attr('id'),
+      url: '/task/' + clicked_task_id,
       type: 'PUT',
-      dataType: 'script',
-      data: { 'task[complete]':$(this).attr('checked'), authenticity_token:authenticity_token, active_task_id:active_task_id },
-    });
+      data: { 'task[complete]':$(this).attr('checked'), authenticity_token:authenticity_token },
+      success: function() {
+        GetTasks();
+      },
+    });  
   } else {
     Stop();
     $.ajax({
-      url: '/task/' + $(this).attr('id'),
+      url: '/task/' + clicked_task_id,
       type: 'PUT',
-      dataType: 'script',
-      data: { 'task[complete]':$(this).attr('checked'), 'task[spent_time]':task_time, authenticity_token:authenticity_token, active_task_id:active_task_id },
+      data: { 'task[complete]':$(this).attr('checked'),
+      'time_entry[time]':task_time, 'time_entry[worktype_id]':worktype_id,
+      authenticity_token:authenticity_token },
+      success: function() {
+        GetTasks();
+      },
     });
   };
 });
 
 $(".add_task.form form").submit(function() {
-  // GetActiveTaskId();
+  GetActiveTaskId();
   $.ajax({
     url: '/task',
     type: 'POST',
-    dataType: 'html',
-    // data: ( $(this).serialize() + '&active_task_id = '+active_task_id),
     data: $(this).serialize(),
-
     success: function() {
       HideTaskForm();
       GetTasks();
     },
-
     error: function(html) {
       $("#messages").html(html.responseText);
     },
-
   });
   return false;
 });

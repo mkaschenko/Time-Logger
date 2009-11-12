@@ -7,6 +7,7 @@ class TimeEntry < ActiveRecord::Base
   def fill_dates
     date = Time.now
     self.spent_on = date
+    self.end_on = date
     self.year = date.year
     self.month = date.month
     self.week = date.strftime("%W")

@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
   $(".task_title").blur(function() {
-    // if (!$(this).val()) {
-      // $(this).addClass('example');
-      // $(this).val('[project] task title @worktype_1 @worktype_n');
-    // };
+    if (!$(this).val()) {
+      $(this).addClass('example');
+      $(this).val('[project] task title @worktype_1 @worktype_n');
+    };
   });
 
   GetTasks();
@@ -15,7 +15,7 @@ $(".add_task.link a").live('click', function() {
   $(".add_task.link").hide();
   $(".add_task.form").show();
   $(".task_title").val('');
-  // $(".task_title").removeClass('example');
+  $(".task_title").removeClass('example');
   $(".task_title").focus();
   return false;
 });
@@ -26,10 +26,10 @@ $(".add_task.form a").live('click', function() {
 });
 
 $(".task_title").live('click', function() {
-    // if ($(this).hasClass('example')) {
-    //   $(this).val('');
-    //   $(".task_title").removeClass('example');
-    // };
+    if ($(this).hasClass('example')) {
+      $(this).val('');
+      $(".task_title").removeClass('example');
+    };
 });
 
 HideTaskForm = function () {
@@ -80,6 +80,7 @@ var total_time = 0, active_task_id = undefined;
 
 Stop = function () {
   total_time += task_time;
+  $().stopTime();
   $("*").stopTime();
   $(".active").removeClass('active');
   $("#stop").hide();
@@ -103,6 +104,20 @@ Start = function (active_task) {
   $("#timer").addClass('active');
   $(active_task).addClass('active');
   $("#stop").show();
+  GetActiveTaskId();
+  $.ajax({
+    url: '/task/' + active_task_id,
+    type: 'PUT',
+    data: { 'time_entry[worktype_id]':worktype_id, authenticity_token:authenticity_token },
+  });
+  
+  $().everyTime("60s", function () {
+    $.ajax({
+      url: '/ping',
+      type: 'PUT',
+      data: { 'task':active_task_id, authenticity_token:authenticity_token },
+    });
+  });
 };
 
 DrawTitle = function (time, element, title) {
@@ -136,25 +151,25 @@ MakeActive = function () {
   };
 };
 
-SendSpentTime = function () {
+SendStatus = function () {
   $.ajax({
     url: '/task/' + active_task_id,
     type: 'PUT',
-    data: { 'time_entry[time]':task_time, 'time_entry[worktype_id]':worktype_id, authenticity_token:authenticity_token },
-  });
+    data: { 'time_entry[status]':true, authenticity_token:authenticity_token },
+  });  
 };
 
 $("#tasks_list a").live('click', function() {
   GetActiveTaskId();
-  if ($(this).hasClass('active')) { Stop(); SendSpentTime(); }
+  if ($(this).hasClass('active')) { Stop(); SendStatus() }
   else {
-    if (active_task_id != undefined) { Stop(); SendSpentTime(); Start($(this)) } 
+    if (active_task_id != undefined) { Stop(); SendStatus(); Start($(this)) } 
     else { Start($(this)) };
   };
   return false;
 });
 
-$("#stop").live('click', function() { GetActiveTaskId(); Stop(); SendSpentTime(); return false });
+$("#stop").live('click', function() { GetActiveTaskId(); Stop(); SendStatus(); return false });
 
 $(":checkbox").live('click', function() {
   GetActiveTaskId();
@@ -174,8 +189,8 @@ $(":checkbox").live('click', function() {
       url: '/task/' + clicked_task_id,
       type: 'PUT',
       data: { 'task[complete]':$(this).attr('checked'),
-      'time_entry[time]':task_time, 'time_entry[worktype_id]':worktype_id,
-      authenticity_token:authenticity_token },
+              'time_entry[status]':true,
+              authenticity_token:authenticity_token },
       success: function() {
         GetTasks();
       },

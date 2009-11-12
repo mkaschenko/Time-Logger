@@ -36,15 +36,29 @@ class TaskController < ApplicationController
       task.update_attributes(params[:task])
     end
     if params[:time_entry]
-      @time_entry = task.time_entries.build(params[:time_entry])
-      @time_entry.user_id = task.user_id
-      @time_entry.project_id = task.project_id
-      @time_entry.fill_dates
-      @time_entry.save
+      if params[:time_entry][:status]
+        time_entry = task.time_entries.find(:first, :conditions => ["user_id = ? and status = ?", @current_user, 0])
+        time_entry.end_on = Time.now
+        time_entry.update_attributes(params[:time_entry])
+      else
+        time_entry = task.time_entries.build(params[:time_entry])
+        time_entry.user_id = task.user_id
+        time_entry.project_id = task.project_id
+        time_entry.fill_dates
+        time_entry.save
+      end
     end
     render :nothing => true
   end
-
+  
+  def ping_time_entry
+    time_entry = TimeEntry.find(:first, :conditions => ["user_id = ? and task_id = ? and status = ?", 
+                                                        @current_user, params[:task], 0])
+    time_entry.end_on = Time.now
+    time_entry.save
+    render :nothing => true
+  end
+  
   def cook_json
     @current_user.tasks.to_json(:only => [:id, :title, :complete], :include => { :project => { :only => :name }, 
                                                                                  :worktype => { :only => [:id, :name] } })

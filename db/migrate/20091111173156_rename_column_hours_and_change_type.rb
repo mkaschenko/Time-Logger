@@ -5,7 +5,7 @@ class RenameColumnHoursAndChangeType < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :time_entries, :time, :float, :null => true
+    change_column :time_entries, :time, :float
     rename_column :time_entries, :time, :hours
   end
 end

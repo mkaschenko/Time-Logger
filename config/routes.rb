@@ -7,6 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   map.resource :session
   map.resources :task
+  map.ping 'ping', :controller => 'task', :action => 'ping_time_entry'
 
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'

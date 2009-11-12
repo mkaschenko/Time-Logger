@@ -39,11 +39,11 @@ HideTaskForm = function () {
 };
 
 Check = function(project_name) {
-    if (project_name == undefined) {
-      return "";
-    } else {
-      return "["+ project_name +"]";
-    };   
+  if (project_name == undefined) {
+    return "";
+  } else {
+    return "["+ project_name +"]";
+  };   
 };
 
 ForCompleteTask = function(worktypes) {
@@ -66,8 +66,8 @@ GetTasks = function () {
   complete_tasks = [];
   uncomplete_tasks = [];
   $.getJSON('/task', function(json) {
-    $.each(json, function() {
-      if (this.task.complete) { complete_tasks.push(this) } 
+    $.each(json.tasks, function() {
+      if (this.complete) { complete_tasks.push(this) } 
       else { uncomplete_tasks.push(this) };
     });
     $("#list_complete").fillTemplate(complete_tasks);

@@ -1,5 +1,5 @@
 %ul#list_complete
   %li
-    #task{ :id => "${task.id}" }
-      %input{ :type => "checkbox", :id => "${task.id}", :checked => true }
-      ${task.project.name:Check} ${task.title} ${task.worktype:ForCompleteTask}
+    #task{ :id => "${id}" }
+      %input{ :type => "checkbox", :id => "${id}", :checked => true }
+      ${project.name:Check} ${title} ${worktypes:ForCompleteTask}

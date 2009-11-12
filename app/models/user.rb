@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
   has_many :tasks
   has_many :time_entries
-  has_and_belongs_to_many :project
+  has_and_belongs_to_many :projects
 
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40

@@ -1,0 +1,12 @@
+-@tasks~
+  :only
+    .id
+    .title
+    .complete
+  +project
+    :only
+      .name
+  +worktypes~
+    :only
+      .id
+      .name

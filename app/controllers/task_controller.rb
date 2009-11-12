@@ -3,9 +3,10 @@ class TaskController < ApplicationController
   before_filter :authorize, :get_current_user
 
   def index
+    @tasks = @current_user.tasks
     respond_to do |wants|
       wants.html { }
-      wants.json { render :json => cook_json }
+      wants.json { }
     end
   end
 
@@ -59,11 +60,6 @@ class TaskController < ApplicationController
     render :nothing => true
   end
   
-  def cook_json
-    @current_user.tasks.to_json(:only => [:id, :title, :complete], :include => { :project => { :only => :name }, 
-                                                                                 :worktype => { :only => [:id, :name] } })
-  end
-
   def cut_title(title)
     title.strip!
     title.gsub!(/\s{2,}/, " ") # replace two and more whitespaces on a whitespace

@@ -1,6 +1,6 @@
 %ul#list
   %li
-    #task{ :id => "${task.id}" }
-      %input{ :type => "checkbox", :id => "${task.id}", :checked => false }
-      %a{ :href => "" } ${task.project.name:Check} ${task.title} 
-      ${task.worktype:ForUncompleteTask}
+    #task{ :id => "${id}" }
+      %input{ :type => "checkbox", :id => "${id}", :checked => false }
+      %a{ :href => "" } ${project.name:Check} ${title} 
+      ${worktypes:ForUncompleteTask}

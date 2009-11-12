@@ -1,0 +1,15 @@
+BUGS:
+TODO:
+  - option to generate keys without quotes
+  - gluing for mas_many associations
+  - comments //
+  - :plain (some symbol for this?)
+  - :only            =>         .aaa
+      .aaa                      .bbb
+      .bbb
+  - :except          =>         !aaa
+      .aaa                      !bbb
+      .bbb
+  -  :plain by default
+  -  define :all by symbol
+

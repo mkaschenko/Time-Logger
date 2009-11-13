@@ -52,9 +52,9 @@ class TaskController < ApplicationController
     render :nothing => true
   end
   
-  def ping_time_entry
+  def ping
     time_entry = TimeEntry.find(:first, :conditions => ["user_id = ? and task_id = ? and status = ?", 
-                                                        @current_user, params[:task], 0])
+                                                        @current_user, params[:id], 0])
     time_entry.end_on = Time.now
     time_entry.save
     render :nothing => true

@@ -113,9 +113,9 @@ Start = function (active_task) {
   
   $().everyTime("60s", function () {
     $.ajax({
-      url: '/ping',
+      url: '/task/' + active_task_id + '/ping',
       type: 'PUT',
-      data: { 'task':active_task_id, authenticity_token:authenticity_token },
+      data: { authenticity_token:authenticity_token },
     });
   });
 };

@@ -43,7 +43,7 @@ Check = function(project_name) {
     return "";
   } else {
     return "["+ project_name +"]";
-  };   
+  };
 };
 
 ForCompleteTask = function(worktypes) {
@@ -67,7 +67,7 @@ GetTasks = function () {
   uncomplete_tasks = [];
   $.getJSON('/task', function(json) {
     $.each(json.tasks, function() {
-      if (this.complete) { complete_tasks.push(this) } 
+      if (this.complete) { complete_tasks.push(this) }
       else { uncomplete_tasks.push(this) };
     });
     $("#list_complete").fillTemplate(complete_tasks);
@@ -92,7 +92,7 @@ Start = function (active_task) {
   } else {
     title = active_task.html();
   };
-  $("#timer_display").everyTime("1s", function (time) { 
+  $("#timer_display").everyTime("1s", function (time) {
     task_time = time;
     DrawTime(task_time, $(this));
     DrawTitle(task_time, $("title"), title);
@@ -110,7 +110,7 @@ Start = function (active_task) {
     type: 'PUT',
     data: { 'time_entry[worktype_id]':worktype_id, authenticity_token:authenticity_token },
   });
-  
+
   $().everyTime("60s", function () {
     $.ajax({
       url: '/task/' + active_task_id + '/ping',
@@ -123,14 +123,14 @@ Start = function (active_task) {
 DrawTitle = function (time, element, title) {
   mins = parseInt(time / 60);
   secs = time % 60;
-  if (secs > 9) { element.html("|"+ mins +"."+ secs +"|" + title) } 
+  if (secs > 9) { element.html("|"+ mins +"."+ secs +"|" + title) }
   else { element.html("|"+ mins +".0"+ secs +"|" + title) };
 };
 
 DrawTime = function (time, element) {
   mins = parseInt(time / 60);
   secs = time % 60;
-  if (secs > 9) { element.html(mins +"<small>"+"."+ secs + "</small>") } 
+  if (secs > 9) { element.html(mins +"<small>"+"."+ secs + "</small>") }
   else { element.html(mins +"<small>"+".0"+ secs + "</small>")};
   // TODO * label total
 };
@@ -156,14 +156,14 @@ SendStatus = function () {
     url: '/task/' + active_task_id,
     type: 'PUT',
     data: { 'time_entry[status]':true, authenticity_token:authenticity_token },
-  });  
+  });
 };
 
 $("#tasks_list a").live('click', function() {
   GetActiveTaskId();
   if ($(this).hasClass('active')) { Stop(); SendStatus() }
   else {
-    if (active_task_id != undefined) { Stop(); SendStatus(); Start($(this)) } 
+    if (active_task_id != undefined) { Stop(); SendStatus(); Start($(this)) }
     else { Start($(this)) };
   };
   return false;
@@ -182,7 +182,7 @@ $(":checkbox").live('click', function() {
       success: function() {
         GetTasks();
       },
-    });  
+    });
   } else {
     Stop();
     $.ajax({

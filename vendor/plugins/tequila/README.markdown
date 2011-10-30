@@ -94,7 +94,7 @@ Have you ever used to_json method in your Rails app? If so, you should be famili
 
     :include => { :association1 => {...}}
 
-You should just remember that every variable definition must be started '-' and every association with '+'.     
+You should just remember that every variable definition must be started '-' and every association with '+'.
 So example above can be written much shortly:
 
     +association1
@@ -164,14 +164,14 @@ Strict order of definitions required! All blocks are optional.
 
 ### Benchmarks ###
 
-    
+
 
                         user        system      total       real
     to_json             7.280000    0.440000    7.720000    (  7.811976)
     jazz                25.920000   1.840000    27.760000   ( 28.229717)
     jazz with preparse  17.210000   1.580000    18.790000   ( 19.122837)
 
-At least for these tests it looks like to_json is ~2.4x faster..  
+At least for these tests it looks like to_json is ~2.4x faster..
 But for some reason you use Ruby instead of C, right? Despite of the fact that Tequila is not too fast today we are happy to have such instrument and are going to develop it further. And we have good plans about it...
 
 ### Plans ###

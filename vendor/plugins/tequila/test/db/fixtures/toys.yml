@@ -1,6 +1,6 @@
 lhc:
   label: LHC
-  price: 1000000.0 
+  price: 1000000.0
 hum:
   label: Humanity
   price: 10

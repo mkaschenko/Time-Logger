@@ -51,15 +51,15 @@ class TaskController < ApplicationController
     end
     render :nothing => true
   end
-  
+
   def ping
-    time_entry = TimeEntry.find(:first, :conditions => ["user_id = ? and task_id = ? and status = ?", 
+    time_entry = TimeEntry.find(:first, :conditions => ["user_id = ? and task_id = ? and status = ?",
                                                         @current_user, params[:id], 0])
     time_entry.end_on = Time.now
     time_entry.save
     render :nothing => true
   end
-  
+
   def cut_title(title)
     title.strip!
     title.gsub!(/\s{2,}/, " ") # replace two and more whitespaces on a whitespace
